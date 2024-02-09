@@ -6,63 +6,80 @@ import javax.swing.JOptionPane;
 public class JuegoAhorcadoFijo extends JuegoAhorcadoBase {
     
     public JuegoAhorcadoFijo(String palabrasecreta) {
-        this.palabrasecreta = palabrasecreta.toUpperCase();
+        this.palabraSecreta = palabrasecreta.toUpperCase();
         inicializarPalabraSecreta();
         intentos = 6;
     }
     
+    @Override
     public void actualizarPalabraActual(char letra) {
-        char[] palabrareemplazar = palabraactual.toCharArray();
+        char[] palabraAReemplazar = palabraActual.toCharArray();
+        
         if (verificarLetra(letra)) {
-            for (int i = 0; i < palabrasecreta.length(); i++) {
-                if (palabrasecreta.charAt(i) == letra) {
-                    palabrareemplazar[i] = letra;
+            for (int i = 0; i < palabraSecreta.length(); i++) {
+                if (palabraSecreta.charAt(i) == letra) {
+                    palabraAReemplazar[i] = letra;
                 }
             }
-            palabraactual = new String(palabrareemplazar);
+            
+            palabraActual = new String(palabraAReemplazar);
         } else {
             intentos--;
         }
     }
     
+    @Override
     public boolean verificarLetra(char letra) {
-        for (char letraverificar : palabrasecreta.toCharArray()) {
+        
+        for (char letraverificar : palabraSecreta.toCharArray()) {
             if (letraverificar == letra) {
                 return true;
             }
         }
+        
         return false;
     }
     
+    @Override
     public void inicializarPalabraSecreta() {
-        palabraactual = "";
-        for (int i = 0; i < palabrasecreta.length(); i++) {
-            palabraactual += "_";
+        palabraActual = "";
+        
+        for (int i = 0; i < palabraSecreta.length(); i++) {
+            palabraActual += "_";
         }
     }
     
+    @Override
     public boolean hasGanado() {
-        return palabraactual.equalsIgnoreCase(palabrasecreta);
+        
+        return palabraActual.equalsIgnoreCase(palabraSecreta);
+        
     }
     
+    @Override
     public void jugar() {
         while (intentos > 0) {
-            StringBuilder palabraMutilada = new StringBuilder();
-            for (int i = 0; i < palabraactual.length(); i++) {
-                palabraMutilada.append(palabraactual.charAt(i)).append(" ");
+            StringBuilder palabraVacia = new StringBuilder();
+            
+            for (int i = 0; i < palabraActual.length(); i++) {
+                palabraVacia.append(palabraActual.charAt(i)).append(" ");
             }
-            String prueba;
+            
+            String letra_s;
+            
             do {
-                prueba = JOptionPane.showInputDialog(null, "Ingrese la letra que intenta adivinar\nPista: " + palabraMutilada + "\nIntentos restantes: " + intentos, "Ahorcado Fijo", JOptionPane.INFORMATION_MESSAGE);
-            } while (prueba == null || prueba.isEmpty());
-            prueba = prueba.toUpperCase();
-            char letra = prueba.charAt(0);
+                letra_s = JOptionPane.showInputDialog(null, "Ingrese la letra que intenta adivinar\nPista: " + palabraVacia + "\nIntentos restantes: " + intentos, "Ahorcado Fijo", JOptionPane.INFORMATION_MESSAGE);
+            } while (letra_s == null || letra_s.isEmpty());
+            
+            letra_s = letra_s.toUpperCase();
+            char letra = letra_s.charAt(0);
             actualizarPalabraActual(letra);
+            
             if (hasGanado()) {
-                JOptionPane.showMessageDialog(null,"Victoria!");
+                JOptionPane.showMessageDialog(null,"Felicidades!\nHas ganado!");
                 intentos = 0;
             } else if (intentos == 0) {
-                JOptionPane.showMessageDialog(null,"Perdio");
+                JOptionPane.showMessageDialog(null,"Perdiste :(");
             }
         }
     }
